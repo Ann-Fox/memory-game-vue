@@ -9,15 +9,28 @@
 
 <script setup>
 import Card from "../components/Card.vue"
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const cardList = ref([]);
 const userSelection = ref([])
-const status = ref('')
+
+const status = computed(()=>{
+  if (remainingPairs.value===0) {
+    return "Player wins!"
+  } else {
+    return `Remaining Pairs: ${remainingPairs.value}`;
+  }
+})
+
+const remainingPairs = computed(()=>{
+  const remainingCards = cardList.value.filter(card => card.matched === false).length
+
+  return remainingCards/2;
+})
 
 for (let index = 0; index < 18; index++) {
   cardList.value.push({
-    value: index,
+    value: 9,
     visible: false,
     position: index,
     matched: false
@@ -54,9 +67,6 @@ watch(userSelection, currentValue => {
   cardList.value[cardOne.position].visible = false
   cardList.value[cardTwo.position].visible = false
  }
-    
-
-
     userSelection.value.length = 0
   }
 }, { deep: true })
