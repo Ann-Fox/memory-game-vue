@@ -52,9 +52,9 @@ const restartGame = () => {
 }
 
 // Формирование колоды карт
-const cardItems = [1,2,3,4,5,6,7,8,9]
+const cardItems = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-cardItems.forEach(item=> {
+cardItems.forEach(item => {
   cardList.value.push({
     value: item,
     visible: true,
@@ -70,8 +70,8 @@ cardItems.forEach(item=> {
   })
 })
 
-cardList.value=cardList.value.map((card,index)=>{
-  return{
+cardList.value = cardList.value.map((card, index) => {
+  return {
     ...card,
     position: index
   }
@@ -112,9 +112,11 @@ watch(userSelection, currentValue => {
       cardList.value[cardTwo.position].matched = true
     } else {
       // status.value = "Несовпадение"
+      setTimeout(() => {
+        cardList.value[cardOne.position].visible = false
+        cardList.value[cardTwo.position].visible = false
+      }, 2000)
 
-      cardList.value[cardOne.position].visible = false
-      cardList.value[cardTwo.position].visible = false
     }
     userSelection.value.length = 0
   }
