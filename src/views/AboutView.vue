@@ -41,25 +41,50 @@ const shuffleCards = () => {
 const restartGame = () => {
   shuffleCards()
 
-cardList.value = cardList.value.map((card, index) => {
-  return{
-    ...card,
-    matched: false,
-    position: index,
-    visible: false
-  }
-})
-}
-
-// Создание массива карт
-for (let index = 0; index < 18; index++) {
-  cardList.value.push({
-    value: 8,
-    visible: false,
-    position: index,
-    matched: false
+  cardList.value = cardList.value.map((card, index) => {
+    return {
+      ...card,
+      matched: false,
+      position: index,
+      visible: false
+    }
   })
 }
+
+// Формирование колоды карт
+const cardItems = [1,2,3,4,5,6,7,8,9]
+
+cardItems.forEach(item=> {
+  cardList.value.push({
+    value: item,
+    visible: true,
+    position: null,
+    matched: false
+  })
+
+  cardList.value.push({
+    value: item,
+    visible: true,
+    position: null,
+    matched: false
+  })
+})
+
+cardList.value=cardList.value.map((card,index)=>{
+  return{
+    ...card,
+    position: index
+  }
+})
+// Создание массива карт
+// for (let index = 0; index < 18; index++) {
+//   cardList.value.push({
+//     value: 8,
+//     visible: false,
+//     position: index,
+//     matched: false
+//   })
+// }
 
 const flipCard = payload => {
   cardList.value[payload.position].visible = true
