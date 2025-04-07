@@ -14,20 +14,23 @@ import { computed, ref, watch } from 'vue'
 const cardList = ref([]);
 const userSelection = ref([])
 
+// Статус игры, если нет ни одной пары, игрок выиграл, иначе, показать количество оставшихся пар
 const status = computed(()=>{
   if (remainingPairs.value===0) {
-    return "Player wins!"
+    return "Ты победил!"
   } else {
-    return `Remaining Pairs: ${remainingPairs.value}`;
+    return `Количество оставшихся пар: ${remainingPairs.value}`;
   }
 })
 
+// Расчет количесва пар карт
 const remainingPairs = computed(()=>{
   const remainingCards = cardList.value.filter(card => card.matched === false).length
 
   return remainingCards/2;
 })
 
+// Создание массива карт
 for (let index = 0; index < 18; index++) {
   cardList.value.push({
     value: 9,
