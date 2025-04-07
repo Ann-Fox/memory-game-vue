@@ -5,9 +5,11 @@
       @select-card="flipCard" :position="card.position" :matched="card.matched"></Card>
   </section>
   <h2>{{ status }}</h2>
+  <button @click="shuffleCards">Перемешать карты</button>
 </template>
 
 <script setup>
+import _ from 'lodash'
 import Card from "../components/Card.vue"
 import { computed, ref, watch } from 'vue'
 
@@ -30,11 +32,16 @@ const remainingPairs = computed(()=>{
   return remainingCards/2;
 })
 
+// Метод перемешивания карт
+const shuffleCards =()=>{
+  cardList.value= _.shuffle(cardList.value)
+}
+
 // Создание массива карт
 for (let index = 0; index < 18; index++) {
   cardList.value.push({
-    value: 9,
-    visible: false,
+    value: index,
+    visible: true,
     position: index,
     matched: false
   })
