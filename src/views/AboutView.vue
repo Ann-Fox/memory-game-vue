@@ -5,7 +5,7 @@
       @select-card="flipCard" :position="card.position" :matched="card.matched"></Card>
   </section>
   <h2>{{ status }}</h2>
-  <button @click="shuffleCards">Перемешать карты</button>
+  <button @click="restartGame">Перезапустить игру</button>
 </template>
 
 <script setup>
@@ -17,8 +17,8 @@ const cardList = ref([]);
 const userSelection = ref([])
 
 // Статус игры, если нет ни одной пары, игрок выиграл, иначе, показать количество оставшихся пар
-const status = computed(()=>{
-  if (remainingPairs.value===0) {
+const status = computed(() => {
+  if (remainingPairs.value === 0) {
     return "Ты победил!"
   } else {
     return `Количество оставшихся пар: ${remainingPairs.value}`;
@@ -26,22 +26,36 @@ const status = computed(()=>{
 })
 
 // Расчет количесва пар карт
-const remainingPairs = computed(()=>{
+const remainingPairs = computed(() => {
   const remainingCards = cardList.value.filter(card => card.matched === false).length
 
-  return remainingCards/2;
+  return remainingCards / 2;
 })
 
 // Метод перемешивания карт
-const shuffleCards =()=>{
-  cardList.value= _.shuffle(cardList.value)
+const shuffleCards = () => {
+  cardList.value = _.shuffle(cardList.value)
+}
+
+// Метод перезапуска игры
+const restartGame = () => {
+  shuffleCards()
+
+cardList.value = cardList.value.map((card, index) => {
+  return{
+    ...card,
+    matched: false,
+    position: index,
+    visible: false
+  }
+})
 }
 
 // Создание массива карт
 for (let index = 0; index < 18; index++) {
   cardList.value.push({
-    value: index,
-    visible: true,
+    value: 8,
+    visible: false,
     position: index,
     matched: false
   })
@@ -63,20 +77,20 @@ watch(userSelection, currentValue => {
   console.log(currentValue);
 
   if (currentValue.length === 2) {
- const cardOne = currentValue[0];
- const cardTwo = currentValue[1];
+    const cardOne = currentValue[0];
+    const cardTwo = currentValue[1];
 
- if (cardOne.faceValue === cardTwo.faceValue) {
-  status.value = "Совпадение"
+    if (cardOne.faceValue === cardTwo.faceValue) {
+      // status.value = "Совпадение"
 
-  cardList.value[cardOne.position].matched = true
-  cardList.value[cardTwo.position].matched = true
- } else {
-  status.value = "Несовпадение"
+      cardList.value[cardOne.position].matched = true
+      cardList.value[cardTwo.position].matched = true
+    } else {
+      // status.value = "Несовпадение"
 
-  cardList.value[cardOne.position].visible = false
-  cardList.value[cardTwo.position].visible = false
- }
+      cardList.value[cardOne.position].visible = false
+      cardList.value[cardTwo.position].visible = false
+    }
     userSelection.value.length = 0
   }
 }, { deep: true })
