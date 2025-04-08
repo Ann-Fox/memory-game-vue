@@ -1,12 +1,18 @@
 <template>
   <h1 class="sr-only">Peek-a-Vue</h1>
 <img src="../../public/images/peek-a-vue-title.png" class="title-main"/>
+<section class="description">
+  <p>Welcom to Peek-a-Vue</p>
+  <p>A card matching game powered  by Vue.js 3!</p>
+</section>
   <TransitionGroup tag="section" class="game-board" name="shuffle-card">
     <Card v-for="card in cardList" :key="`${card.value}-${card.variant}`" :value="card.value" :visible="card.visible"
       @select-card="flipCard" :position="card.position" :matched="card.matched"></Card>
   </TransitionGroup>
-  <h2>{{ status }}</h2>
-  <button @click="restartGame" class="button-restart">
+  <h2 class="status">{{ status }}</h2>
+  <button v-if="newPlayer" @click="startGame" class="button-restart">
+    <img src="../../public/images/play.svg"/> Start game</button>
+  <button v-else @click="restartGame" class="button-restart">
     <img src="../../public/images/restart.svg"/> Restart game</button>
 </template>
 
@@ -18,6 +24,13 @@ import { launchConfetti } from '../utilite/confetti'
 
 const cardList = ref([]);
 const userSelection = ref([])
+const newPlayer = ref(true)
+
+const startGame = ()=> {
+newPlayer.value = false
+
+restartGame()
+}
 
 // Статус игры, если нет ни одной пары, игрок выиграл, иначе, показать количество оставшихся пар
 const status = computed(() => {
@@ -69,7 +82,7 @@ cardItems.forEach(item => {
   cardList.value.push({
     value: item,
     variant: 2,
-    visible: false,
+    visible: true,
     position: null,
     matched: false
   })
@@ -163,17 +176,37 @@ watch(userSelection, currentValue => {
   margin-bottom: 40px;
 }
 
+.description {
+  font-family: "Titillium Web", sans-serif;
+  /* font-weight: 600;
+  font-style: normal; */
+}
+
+.description p {
+  font-size: 1.2rem;
+}
+
+.description p:last-child {
+  margin-bottom: 30px;
+}
+
+.status {
+  font-family: "Titillium Web", sans-serif;
+}
+
 .button-restart {
   background-color: orange;
   color: white;
-  padding: 0.75rem 0.5rem;
+  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   font-weight: bold;
+  font-family: "Titillium Web", sans-serif;
+font-size: 1.1rem;
 }
 
 .button-restart img {
