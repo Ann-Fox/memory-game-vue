@@ -1,10 +1,10 @@
 <template>
   <h1 class="sr-only">Peek-a-Vue</h1>
 <img src="../../public/images/peek-a-vue-title.png" class="title-main"/>
-  <section class="game-board">
-    <Card v-for="(card, index) in cardList" :key="`cadr-${index}`" :value="card.value" :visible="card.visible"
+  <TransitionGroup tag="section" class="game-board" name="shuffle-card">
+    <Card v-for="card in cardList" :key="`${card.value}-${card.variant}`" :value="card.value" :visible="card.visible"
       @select-card="flipCard" :position="card.position" :matched="card.matched"></Card>
-  </section>
+  </TransitionGroup>
   <h2>{{ status }}</h2>
   <button @click="restartGame" class="button-restart">
     <img src="../../public/images/restart.svg"/> Restart game</button>
@@ -35,13 +35,13 @@ const remainingPairs = computed(() => {
 })
 
 // Метод перемешивания карт
-const shuffleCards = () => {
-  cardList.value = _.shuffle(cardList.value)
-}
+// const shuffleCards = () => {
+//   // cardList.value = _.shuffle(cardList.value)
+// }
 
 // Метод перезапуска игры
 const restartGame = () => {
-  shuffleCards()
+  cardList.value = _.shuffle(cardList.value)
 
   cardList.value = cardList.value.map((card, index) => {
     return {
@@ -59,6 +59,7 @@ const cardItems = ['bat', 'candy', 'cauldron','cupcake', 'ghost', 'moon', 'pumpk
 cardItems.forEach(item => {
   cardList.value.push({
     value: item,
+    variant: 1,
     visible: false,
     position: null,
     matched: false
@@ -66,6 +67,7 @@ cardItems.forEach(item => {
 
   cardList.value.push({
     value: item,
+    variant: 2,
     visible: false,
     position: null,
     matched: false
@@ -169,5 +171,9 @@ watch(userSelection, currentValue => {
 
 .button-restart img {
   padding-right: 10px;
+}
+
+.shuffle-card-move {
+  transition: transform 0.8s ease-in;
 }
 </style>
