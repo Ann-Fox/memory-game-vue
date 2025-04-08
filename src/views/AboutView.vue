@@ -14,6 +14,7 @@
 import _ from 'lodash'
 import Card from "../components/Card.vue"
 import { computed, ref, watch } from 'vue'
+import { launchConfetti } from '../utilite/confetti'
 
 const cardList = ref([]);
 const userSelection = ref([])
@@ -105,6 +106,12 @@ const flipCard = payload => {
 }
 
 console.log(userSelection);
+
+watch(remainingPairs, currentValue => {
+  if (currentValue === 0) {
+    launchConfetti()
+  }
+})
 
 watch(userSelection, currentValue => {
   console.log(currentValue);
