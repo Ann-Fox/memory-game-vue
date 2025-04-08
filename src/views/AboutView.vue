@@ -1,11 +1,13 @@
 <template>
-  <h1>This is an game</h1>
+  <h1 class="sr-only">Peek-a-Vue</h1>
+<img src="../../public/images/peek-a-vue-title.png" class="title-main"/>
   <section class="game-board">
     <Card v-for="(card, index) in cardList" :key="`cadr-${index}`" :value="card.value" :visible="card.visible"
       @select-card="flipCard" :position="card.position" :matched="card.matched"></Card>
   </section>
   <h2>{{ status }}</h2>
-  <button @click="restartGame">Перезапустить игру</button>
+  <button @click="restartGame" class="button-restart">
+    <img src="../../public/images/restart.svg"/> Restart game</button>
 </template>
 
 <script setup>
@@ -52,19 +54,19 @@ const restartGame = () => {
 }
 
 // Формирование колоды карт
-const cardItems = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+const cardItems = ['bat', 'candy', 'cauldron','cupcake', 'ghost', 'moon', 'pumpkin','witch-hat', 'cat']
 
 cardItems.forEach(item => {
   cardList.value.push({
     value: item,
-    visible: true,
+    visible: false,
     position: null,
     matched: false
   })
 
   cardList.value.push({
     value: item,
-    visible: true,
+    visible: false,
     position: null,
     matched: false
   })
@@ -129,16 +131,43 @@ watch(userSelection, currentValue => {
 </script>
 
 <style>
-.card {
-  border: 5px solid #ccc;
-}
-
 .game-board {
   display: grid;
-  grid-template-columns: repeat(6, 50px);
-  grid-template-rows: repeat(3, 50px);
+  grid-template-columns: repeat(6, 120px);
+  grid-template-rows: repeat(3, 120px);
   grid-column-gap: 20px;
   grid-row-gap: 20px;
   justify-content: center;
+}
+/** Если нужно, чтобы элемент был доступен только для скринридеров */
+.sr-only {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.title-main {
+  margin-bottom: 40px;
+}
+
+.button-restart {
+  background-color: orange;
+  color: white;
+  padding: 0.75rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.button-restart img {
+  padding-right: 10px;
 }
 </style>

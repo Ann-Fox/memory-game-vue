@@ -1,13 +1,16 @@
 <template>
-    <div class="card" @click="selectCard">
-        <div v-if="visible" class="card-face is-front">{{ value }} - {{ position }} - {{ matched }}</div>
-        <div v-else class="card-face is-back">back</div>
+    <div class="card" :class="flippedStyle" @click="selectCard">
+        <div  class="card-face is-front"><img :src="`/images/${value}.png`" :alt="value"/>
+            <img v-if="matched" src="../../public/images/checkmark.svg" class="icon-checkmark" />
+            
+        </div>
+        <div class="card-face is-back"></div>
     </div>
 </template>
 
 <script setup>
 
-import { defineEmits } from 'vue';
+import { defineEmits, computed } from 'vue';
 
 const props = defineProps({
     matched: {
@@ -19,7 +22,7 @@ const props = defineProps({
         required: true
     },
     value: {
-        type: Number,
+        type: String,
         required: true
     },
     visible: {
@@ -29,6 +32,12 @@ const props = defineProps({
 });
 
 const emit = defineEmits();
+
+const flippedStyle = computed(()=> {
+    if (props.visible) {
+        return 'is-flipped'
+    }
+})
 
 const selectCard = () => {
     emit('select-card', {
@@ -41,7 +50,12 @@ const selectCard = () => {
 <style>
 .card {
     position: relative;
-    border: 5px solid #ccc;
+    transition: 0.5s transform ease-in;
+    transform-style: preserve-3d;
+}
+
+.card.is-flipped {
+    transform: rotateY(180deg);
 }
 
 .card-face {
@@ -51,15 +65,26 @@ const selectCard = () => {
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 4px;
+    backface-visibility: hidden;
+
 }
 
 .card-face.is-front {
-    background: red;
+    background-image: url('../../public/images/card-bg.png');
     color: white;
+    transform: rotateY(180deg);
+
 }
 
 .card-face.is-back {
-    background: blue;
+    background-image: url('../../public/images/card-bg-empty.png');
     color: white;
+}
+
+.icon-checkmark {
+    position: absolute;
+    bottom: 7px;
+    right: 7px;
 }
 </style>
