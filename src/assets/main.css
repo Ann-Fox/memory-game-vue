@@ -1,7 +1,7 @@
 @import './base.css';
 
 #app {
-  height: 100vh;
+  /* height: 100vh; */
   background-image: url(/images/page-bg.png);
   background-color: #00070c;
   color: #fff;

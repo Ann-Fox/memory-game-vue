@@ -1,10 +1,5 @@
 <template>
-  <h1 class="sr-only">Peek-a-Vue</h1>
-<img src="../../public/images/peek-a-vue-title.png" class="title-main"/>
-<section class="description">
-  <p>Welcom to Peek-a-Vue</p>
-  <p>A card matching game powered  by Vue.js 3!</p>
-</section>
+  <HeaderComponent></HeaderComponent>
   <TransitionGroup tag="section" class="game-board" name="shuffle-card">
     <Card v-for="card in cardList" :key="`${card.value}-${card.variant}`" :value="card.value" :visible="card.visible"
       @select-card="flipCard" :position="card.position" :matched="card.matched"></Card>
@@ -21,6 +16,7 @@ import _ from 'lodash'
 import Card from "../components/Card.vue"
 import { computed, ref, watch } from 'vue'
 import { launchConfetti } from '../utilite/confetti'
+import HeaderComponent from '@/components/HeaderComponent.vue';
 
 const cardList = ref([]);
 const userSelection = ref([])
@@ -161,34 +157,6 @@ watch(userSelection, currentValue => {
   grid-row-gap: 20px;
   justify-content: center;
 }
-/** Если нужно, чтобы элемент был доступен только для скринридеров */
-.sr-only {
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  white-space: nowrap;
-  width: 1px;
-}
-
-.title-main {
-  margin-bottom: 40px;
-}
-
-.description {
-  font-family: "Titillium Web", sans-serif;
-  /* font-weight: 600;
-  font-style: normal; */
-}
-
-.description p {
-  font-size: 1.2rem;
-}
-
-.description p:last-child {
-  margin-bottom: 30px;
-}
 
 .status {
   font-family: "Titillium Web", sans-serif;
@@ -197,21 +165,29 @@ watch(userSelection, currentValue => {
 .button-restart {
   background-color: orange;
   color: white;
-  padding: 0.75rem 1rem;
+  padding: 0.70rem 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  border: none;
+  border: 2px solid orange;
   border-radius: 8px;
   font-weight: bold;
   font-family: "Titillium Web", sans-serif;
 font-size: 1.1rem;
+cursor: pointer;
+
 }
 
+.button-restart:hover {
+  background-color: transparent;
+  border: 2px solid orange;
+
+}
 .button-restart img {
   padding-right: 10px;
 }
+
 
 .shuffle-card-move {
   transition: transform 0.8s ease-in;
