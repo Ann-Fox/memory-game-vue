@@ -1,14 +1,11 @@
 <template>
   <HeaderComponent></HeaderComponent>
+  <NewGameButton :new-player="newPlayer" @start-new-game="startNewGame"></NewGameButton>
   <TransitionGroup tag="section" class="game-board" name="shuffle-card">
     <Card v-for="card in cardList" :key="`${card.value}-${card.variant}`" :value="card.value" :visible="card.visible"
       @select-card="flipCard" :position="card.position" :matched="card.matched"></Card>
   </TransitionGroup>
   <h2 class="status">{{ status }}</h2>
-  <button v-if="newPlayer" @click="startGame" class="button-restart">
-    <img src="../../public/images/play.svg"/> Start game</button>
-  <button v-else @click="restartGame" class="button-restart">
-    <img src="../../public/images/restart.svg"/> Restart game</button>
 </template>
 
 <script setup>
@@ -17,6 +14,7 @@ import Card from "../components/Card.vue"
 import { computed, ref, watch } from 'vue'
 import { launchConfetti } from '../utilite/confetti'
 import HeaderComponent from '@/components/HeaderComponent.vue';
+import NewGameButton from '@/components/NewGameButton.vue';
 
 const cardList = ref([]);
 const userSelection = ref([])
@@ -26,6 +24,14 @@ const startGame = ()=> {
 newPlayer.value = false
 
 restartGame()
+}
+
+const startNewGame = ()=> {
+  if(newPlayer) {
+    startGame()
+  } else {
+    restartGame()
+  }
 }
 
 // Статус игры, если нет ни одной пары, игрок выиграл, иначе, показать количество оставшихся пар
@@ -43,11 +49,6 @@ const remainingPairs = computed(() => {
 
   return remainingCards / 2;
 })
-
-// Метод перемешивания карт
-// const shuffleCards = () => {
-//   // cardList.value = _.shuffle(cardList.value)
-// }
 
 // Метод перезапуска игры
 const restartGame = () => {
@@ -90,15 +91,6 @@ cardList.value = cardList.value.map((card, index) => {
     position: index
   }
 })
-// Создание массива карт
-// for (let index = 0; index < 18; index++) {
-//   cardList.value.push({
-//     value: 8,
-//     visible: false,
-//     position: index,
-//     matched: false
-//   })
-// }
 
 const flipCard = payload => {
   cardList.value[payload.position].visible = true
@@ -139,7 +131,7 @@ watch(userSelection, currentValue => {
       setTimeout(() => {
         cardList.value[cardOne.position].visible = false
         cardList.value[cardTwo.position].visible = false
-      }, 2000)
+      }, 1000)
 
     }
     userSelection.value.length = 0
@@ -161,33 +153,6 @@ watch(userSelection, currentValue => {
 .status {
   font-family: "Titillium Web", sans-serif;
 }
-
-.button-restart {
-  background-color: orange;
-  color: white;
-  padding: 0.70rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  border: 2px solid orange;
-  border-radius: 8px;
-  font-weight: bold;
-  font-family: "Titillium Web", sans-serif;
-font-size: 1.1rem;
-cursor: pointer;
-
-}
-
-.button-restart:hover {
-  background-color: transparent;
-  border: 2px solid orange;
-
-}
-.button-restart img {
-  padding-right: 10px;
-}
-
 
 .shuffle-card-move {
   transition: transform 0.8s ease-in;
