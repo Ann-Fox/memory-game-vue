@@ -19,15 +19,16 @@ import NewGameButton from '@/components/NewGameButton.vue';
 const cardList = ref([]);
 const userSelection = ref([])
 const newPlayer = ref(true)
+const userCanFlipCard = ref(true)
 
-const startGame = ()=> {
-newPlayer.value = false
+const startGame = () => {
+  newPlayer.value = false
 
-restartGame()
+  restartGame()
 }
 
-const startNewGame = ()=> {
-  if(newPlayer) {
+const startNewGame = () => {
+  if (newPlayer) {
     startGame()
   } else {
     restartGame()
@@ -65,7 +66,7 @@ const restartGame = () => {
 }
 
 // Формирование колоды карт
-const cardItems = ['bat', 'candy', 'cauldron','cupcake', 'ghost', 'moon', 'pumpkin','witch-hat', 'cat']
+const cardItems = ['bat', 'candy', 'cauldron', 'cupcake', 'ghost', 'moon', 'pumpkin', 'witch-hat', 'cat']
 
 cardItems.forEach(item => {
   cardList.value.push({
@@ -93,16 +94,24 @@ cardList.value = cardList.value.map((card, index) => {
 })
 
 const flipCard = payload => {
-  cardList.value[payload.position].visible = true
+  if (userCanFlipCard.value) {
+    if (userCanFlipCard.value) {
+      cardList.value[payload.position].visible = true
 
-  if (userSelection.value[0]) {
-    if (userSelection.value[0].position === payload.position && userSelection.value[0].faceValue === payload.faceValue) {
-      return userSelection;
-    } else {
-      userSelection.value[1] = payload
+
+      if (userSelection.value[0]) {
+        if (userSelection.value[0].position === payload.position && userSelection.value[0].faceValue === payload.faceValue) {
+          return 
+        } else {
+          userSelection.value[1] = payload
+        }
+      } else {
+        userSelection.value[0] = payload
+      }
     }
-  } else {
-    userSelection.value[0] = payload
+    else { 
+      return 
+    }
   }
 }
 
@@ -120,17 +129,21 @@ watch(userSelection, currentValue => {
   if (currentValue.length === 2) {
     const cardOne = currentValue[0];
     const cardTwo = currentValue[1];
+    userCanFlipCard.value = false
 
     if (cardOne.faceValue === cardTwo.faceValue) {
       // status.value = "Совпадение"
 
       cardList.value[cardOne.position].matched = true
       cardList.value[cardTwo.position].matched = true
+      // Разрешить пользователю переворачивать новую карту
+      userCanFlipCard.value = true 
     } else {
       // status.value = "Несовпадение"
       setTimeout(() => {
         cardList.value[cardOne.position].visible = false
         cardList.value[cardTwo.position].visible = false
+        userCanFlipCard.value = true
       }, 1000)
 
     }

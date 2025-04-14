@@ -40,10 +40,16 @@ const flippedStyle = computed(()=> {
 })
 
 const selectCard = () => {
-    emit('select-card', {
+    // emit('select-card', {
+    //     position: props.position,
+    //     faceValue: props.value
+    // });
+    if (!props.matched) {
+        emit('select-card', {
         position: props.position,
         faceValue: props.value
     });
+    }
 };
 </script>
 
